@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "MVvEj72oS+A=",
+  "dgSpecHash": "6ElUMX6eepE=",
   "success": true,
   "projectFilePath": "D:\\ORADEA\\LICENTA\\PARTEA_PRACTICA\\TestFramework\\TestFramework\\TestFramework.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\andre\\.nuget\\packages\\coverlet.collector\\8.0.0\\coverlet.collector.8.0.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\dotnetseleniumextras.waithelpers\\3.11.0\\dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\microsoft.applicationinsights\\2.23.0\\microsoft.applicationinsights.2.23.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\microsoft.codecoverage\\18.0.1\\microsoft.codecoverage.18.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\microsoft.net.test.sdk\\18.0.1\\microsoft.net.test.sdk.18.0.1.nupkg.sha512",

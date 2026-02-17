@@ -178,3 +178,4 @@ D:\ORADEA\LICENTA\PARTEA_PRACTICA\TestFramework\TestFramework\obj\Debug\net8.0\r
 D:\ORADEA\LICENTA\PARTEA_PRACTICA\TestFramework\TestFramework\obj\Debug\net8.0\TestFramework.pdb
 D:\ORADEA\LICENTA\PARTEA_PRACTICA\TestFramework\TestFramework\obj\Debug\net8.0\TestFramework.genruntimeconfig.cache
 D:\ORADEA\LICENTA\PARTEA_PRACTICA\TestFramework\TestFramework\obj\Debug\net8.0\ref\TestFramework.dll
+D:\ORADEA\LICENTA\PARTEA_PRACTICA\TestFramework\TestFramework\bin\Debug\net8.0\SeleniumExtras.WaitHelpers.dll

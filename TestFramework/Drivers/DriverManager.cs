@@ -55,6 +55,35 @@ namespace TestFramework.Drivers
             System.Threading.Thread.Sleep(seconds * 1000);
         }
 
+        private void MoveSlider(By locator, string directionKey)
+        {
+            var element = _wait.Until(d => d.FindElement(locator));
+            element.SendKeys(directionKey);
+        }
+
+        public void MoveSliderRightOnePosition(By locator) => MoveSlider(locator, Keys.ArrowRight);
+        public void MoveSliderLeftOnePosition(By locator) => MoveSlider(locator, Keys.ArrowLeft);
+
+        public string GetText(By locator)
+        {
+            var element = WaitForElement(locator);
+            return element.Text.Trim();
+        }
+
+        public void MoveSliderToValue(By sliderLocator, By labelLocator, string targetValue, string directionKey)
+        {
+            var slider = WaitForElement(sliderLocator);
+            int maxSafetyAttempts = 100; // Protecție împotriva loop-urilor infinite
+
+            while (GetText(labelLocator) != targetValue && maxSafetyAttempts > 0)
+            {
+                slider.SendKeys(directionKey);
+                maxSafetyAttempts--;
+            }
+
+            if (maxSafetyAttempts == 0)
+                throw new Exception($"Nu s-a putut ajunge la valoarea {targetValue} în 100 de pași.");
+        }
 
         public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);
         public void QuitBrowser() { _driver?.Quit(); _driver?.Dispose(); }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
+using TestFramework.Pages.Homepage.HompageComponents.NavBarComponent;
 using TestFramework.Pages.Homepage.HompageComponents.SearchBarComponent;
 
 namespace TestFramework.Pages.Homepage
@@ -16,7 +17,9 @@ namespace TestFramework.Pages.Homepage
 
         // Componenta este privată, accesibilă prin proprietate
         private SearchBarComponent _searchBar;
+        private NavBarComponent _navBar;
         public SearchBarComponent SearchBar => _searchBar ??= new SearchBarComponent(DriverMgr);
+        public NavBarComponent NavBar => _navBar ??= new NavBarComponent(DriverMgr);
 
         public HomePage(DriverManager driver) : base(driver) { }
 

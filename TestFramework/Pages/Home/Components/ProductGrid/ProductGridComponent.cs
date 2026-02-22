@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TestFramework.Drivers;
 using TestFramework.Models;
 
-namespace TestFramework.Pages.Homepage.HompageComponents.ProductGridComponent
+namespace TestFramework.Pages.Home
 {
     public class ProductGridComponent(DriverManager driver) : BasePage(driver)
     {
@@ -19,6 +19,7 @@ namespace TestFramework.Pages.Homepage.HompageComponents.ProductGridComponent
         private readonly By _titleLocator = By.ClassName("book-title");
         private readonly By _authorLocator = By.ClassName("book-author");
         private readonly By _priceLocator = By.ClassName("book-price");
+        private const string AddToCartBtnTemplate = "//p[text()=\"{0}\"]/ancestor::div[contains(@class, ' book-card ')]//button[contains(text(), 'Add to cart')]";
 
         public List<BookModel> GetAllBooks()
         {
@@ -57,6 +58,20 @@ namespace TestFramework.Pages.Homepage.HompageComponents.ProductGridComponent
                 }
             }
             return booksList;
+        }
+
+        /// <summary>
+        /// Identifică un card de produs după titlu și apasă butonul "Add to cart".
+        /// </summary>
+        public void AddBookToCart(string bookTitle)
+        {
+            // Injectam titlul in template
+            string finalXpath = string.Format(AddToCartBtnTemplate, bookTitle);
+
+            // Folosim metoda noastra Click care are deja "WaitForElementToBeClickable" inclus
+            DriverMgr.Click(By.XPath(finalXpath));
+
+            TestContext.Out.WriteLine($"[ACTION] Clicked 'Add to cart' for book: {bookTitle}");
         }
     }
 }

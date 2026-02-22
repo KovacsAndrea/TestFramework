@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
 
-namespace TestFramework.Pages.Homepage
+namespace TestFramework.Pages.Home
 {
     public class NavBarComponent:BasePage
     {
@@ -16,6 +16,8 @@ namespace TestFramework.Pages.Homepage
         private readonly By _cartIcon = By.Id("nav-bar-cart-icon");
         private readonly By _userAvatarLoggedOut = By.Id("nav-bar-user-avatar-logged-out");
         private readonly By _userAvatarLoggedIn = By.Id("nav-bar-user-avatar-logged-in");
+        private readonly By _faveBadge = By.Id("//button[@id=\"nav-bar-favorite-icon\"]//span[contains(@class, 'MuiBadge-badge')]");
+        private readonly By _cartBadge = By.Id("//button[@id=\"nav-bar-cart-icon\"]//span[contains(@class, 'MuiBadge-badge')]");
 
         public NavBarComponent(DriverManager driver) : base(driver) { }
 
@@ -42,6 +44,16 @@ namespace TestFramework.Pages.Homepage
         public void clickOnLoggedOutUserAvatar()
         {
             DriverMgr.Click(_userAvatarLoggedOut);
+        }
+
+        public int GetCartBadgeCount()
+        {
+            return DriverMgr.GetBadgeNumber(_cartBadge);
+        }
+
+        public int GetFaveBadgeCount()
+        {
+            return DriverMgr.GetBadgeNumber(_faveBadge);
         }
 
     }

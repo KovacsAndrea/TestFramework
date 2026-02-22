@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
 
-namespace TestFramework.Pages.Homepage
+namespace TestFramework.Pages.Home
 {
     public class HomeSidemenuComponent(DriverManager driver) : BasePage(driver)
     {

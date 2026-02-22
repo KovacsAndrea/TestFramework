@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
-namespace TestFramework.Pages.Homepage
+namespace TestFramework.Pages.Home
 {
     public class SortingComponent(DriverManager driver) : BasePage(driver)
     {

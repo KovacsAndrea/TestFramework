@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using TestFramework.Drivers;
 
-namespace TestFramework.Pages.Homepage
+namespace TestFramework.Pages.Home
 {
     public class SortingOrderComponent: BasePage
     {

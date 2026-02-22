@@ -1,11 +1,11 @@
 ﻿using TestFramework.Drivers;
-using TestFramework.Pages.Homepage.HompageComponents.ProductGridComponent;
+using TestFramework.Constants;
 
-namespace TestFramework.Pages.Homepage
+namespace TestFramework.Pages.Home
 {
     public class HomePage(DriverManager driver) : BasePage(driver)
     {
-        private readonly string _basePath = "http://localhost:5173/home";
+        private readonly string _basePath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
 
         // Componenta este privată, accesibilă prin proprietate
         private SearchBarComponent _searchBar = null!;
@@ -27,6 +27,21 @@ namespace TestFramework.Pages.Homepage
         {
             SearchBar.TypeSearchText(text);
             SearchBar.ClickSearch();
+        }
+
+        public void AcceptAlert()
+        {
+            DriverMgr.AcceptAlert();
+        }
+
+        public void DismissAlert()
+        {
+            DriverMgr.DismissAlert();
+        }
+
+        public string GetAlertText()
+        {
+            return DriverMgr.GetAlertText();
         }
     }
 }

@@ -18,14 +18,38 @@ namespace TestFramework.Drivers
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
-        public IWebElement WaitForElement(By locator, int timeoutInSeconds = 10)
+        public IWebElement WaitForElement(By locator)
         {
             return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
         }
 
-        public IWebElement WaitForElementToBeClickable(By locator, int timeoutInSeconds = 10)
+        public IWebElement WaitForElementToBeClickable(By locator)
         {
             return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+        }
+
+        public IAlert WaitForAlert()
+        {
+            // Așteptăm să apară alerta (uneori are un mic delay)
+            return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+        }
+
+        public void AcceptAlert()
+        {
+            var alert = WaitForAlert();
+            alert.Accept();
+        }
+
+        public void DismissAlert()
+        {
+            var alert = WaitForAlert();
+            alert.Dismiss();
+        }
+
+        public string GetAlertText()
+        {
+            var alert = WaitForAlert();
+            return alert.Text ?? string.Empty;
         }
 
         public IReadOnlyCollection<IWebElement> FindElements(By locator)
@@ -33,6 +57,19 @@ namespace TestFramework.Drivers
             // Asteptam sa apara macar primul element din lista inainte sa le luam pe toate
             _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(locator));
             return _driver.FindElements(locator);
+        }
+
+        public IWebElement? FindElement(By locator)
+        {
+            try
+            {
+                var elements = _driver.FindElements(locator);
+                return elements.Count > 0 ? elements[0] : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         // Heavy Lifting: Metodă care scrie TEXT doar după ce câmpul e gata
@@ -91,6 +128,19 @@ namespace TestFramework.Drivers
         {
             var element = WaitForElement(locator);
             return element.Text.Trim();
+        }
+
+        public int GetBadgeNumber(By locator)
+        {
+            var badge = FindElement(locator);
+
+            // Verificăm dacă am găsit ceva și dacă are text
+            if (badge != null && !string.IsNullOrEmpty(badge.Text))
+            {
+                return int.TryParse(badge.Text.Trim(), out int result) ? result : 0;
+            }
+
+            return 0; // Dacă badge-ul e null, coșul e clar gol
         }
 
         public void MoveSliderToValue(By sliderLocator, By labelLocator, int targetValue, string directionKey)

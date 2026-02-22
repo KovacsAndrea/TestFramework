@@ -7,8 +7,8 @@ namespace TestFramework.Drivers
 {
     public class DriverManager
     {
-        private IWebDriver _driver;
-        private WebDriverWait _wait;
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
 
         public void StartBrowser()
         {
@@ -26,6 +26,13 @@ namespace TestFramework.Drivers
         public IWebElement WaitForElementToBeClickable(By locator, int timeoutInSeconds = 10)
         {
             return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+        }
+
+        public IReadOnlyCollection<IWebElement> FindElements(By locator)
+        {
+            // Asteptam sa apara macar primul element din lista inainte sa le luam pe toate
+            _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(locator));
+            return _driver.FindElements(locator);
         }
 
         // Heavy Lifting: Metodă care scrie TEXT doar după ce câmpul e gata
@@ -46,7 +53,8 @@ namespace TestFramework.Drivers
         // Pentru extragerea de atribute (iconițe, clase CSS)
         public string GetAttribute(By locator, string attribute)
         {
-            return WaitForElement(locator).GetAttribute(attribute);
+            var element = WaitForElement(locator);
+            return element.GetAttribute(attribute) ?? String.Empty;
         }
 
         public void Wait(int seconds)
@@ -55,14 +63,29 @@ namespace TestFramework.Drivers
             System.Threading.Thread.Sleep(seconds * 1000);
         }
 
-        private void MoveSlider(By locator, string directionKey)
+        /// <summary>
+        /// Misca un slider la dreapta cu un numar specific de pozitii (n).
+        /// </summary>
+        public void MoveSliderRight(By locator, int positions)
         {
-            var element = _wait.Until(d => d.FindElement(locator));
-            element.SendKeys(directionKey);
+            var element = WaitForElement(locator);
+            for (int i = 0; i < positions; i++)
+            {
+                element.SendKeys(Keys.ArrowRight);
+            }
         }
 
-        public void MoveSliderRightOnePosition(By locator) => MoveSlider(locator, Keys.ArrowRight);
-        public void MoveSliderLeftOnePosition(By locator) => MoveSlider(locator, Keys.ArrowLeft);
+        /// <summary>
+        /// Misca un slider la stanga cu un numar specific de pozitii (n).
+        /// </summary>
+        public void MoveSliderLeft(By locator, int position)
+        {
+            var element = WaitForElement(locator);
+            for(int i = 0;i < position; i++)
+            {
+                element.SendKeys(Keys.ArrowLeft);
+            }
+        }
 
         public string GetText(By locator)
         {
@@ -70,19 +93,28 @@ namespace TestFramework.Drivers
             return element.Text.Trim();
         }
 
-        public void MoveSliderToValue(By sliderLocator, By labelLocator, string targetValue, string directionKey)
+        public void MoveSliderToValue(By sliderLocator, By labelLocator, int targetValue, string directionKey)
         {
-            var slider = WaitForElement(sliderLocator);
-            int maxSafetyAttempts = 100; // Protecție împotriva loop-urilor infinite
+            var slider = WaitForElementToBeClickable(sliderLocator);
+            int maxSafetyAttempts = 150; 
 
-            while (GetText(labelLocator) != targetValue && maxSafetyAttempts > 0)
+            while (maxSafetyAttempts > 0)
             {
+                string currentText = GetText(labelLocator);
+                if (int.TryParse(currentText, out int currentValue))
+                {
+                    if (currentValue == targetValue)
+                    {
+                        return;
+                    }
+                }
                 slider.SendKeys(directionKey);
                 maxSafetyAttempts--;
             }
-
             if (maxSafetyAttempts == 0)
-                throw new Exception($"Nu s-a putut ajunge la valoarea {targetValue} în 100 de pași.");
+            {
+                throw new Exception($"Nu s-a putut ajunge la valoarea {targetValue} in 150 de pasi. Directia folosita: {directionKey}");
+            }
         }
 
         public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);

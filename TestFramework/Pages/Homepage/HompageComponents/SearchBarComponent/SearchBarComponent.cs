@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
 
-namespace TestFramework.Pages.Homepage.HompageComponents.SearchBarComponent
+namespace TestFramework.Pages.Homepage
 {
     public class SearchBarComponent : BasePage
     {

@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestFramework.Drivers;
-using System.Threading;
 
-
-namespace TestFramework.Tests
+namespace TestFramework.Pages.Cart.Components
 {
-    internal class LoginTests
+    internal class SummaryComponent
     {
-    
     }
 }

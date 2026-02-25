@@ -33,6 +33,12 @@
 
   <ItemGroup>
     <Folder Include="Reports\" />
+    <Folder Include="Tests\Integration\LoginTestFlow\" />
+    <Folder Include="Tests\Integration\CheckoutTestFlow\" />
+    <Folder Include="Tests\Integration\BrowsingTestFlow\" />
+    <Folder Include="Tests\Integration\FavesTestFlow\" />
+    <Folder Include="Tests\Integration\AccountTestFlow\" />
+    <Folder Include="Tests\Integration\RegistrationTestFlow\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
 

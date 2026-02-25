@@ -167,6 +167,11 @@ namespace TestFramework.Drivers
             }
         }
 
+        public string GetUrl()
+        {
+            return _driver.Url;
+        }
+
         public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);
         public void QuitBrowser() { _driver?.Quit(); _driver?.Dispose(); }
 

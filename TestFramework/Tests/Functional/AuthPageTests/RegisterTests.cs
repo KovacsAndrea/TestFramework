@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestFramework.Constants;
 using TestFramework.Pages.Auth;
 
 namespace TestFramework.Tests.Functional.AuthPageTests
@@ -35,15 +36,17 @@ namespace TestFramework.Tests.Functional.AuthPageTests
             DriverMgr.Wait(3);
 
             // Assert
-            bool isSuccess = authPage.Register.IsRegistrationSuccessful();
-            Assert.That(isSuccess, Is.True, "User was not created successfully!");
+            string expectedPath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
+            string currentPath = DriverMgr.GetUrl();
+            Assert.That(currentPath, Is.EqualTo(expectedPath),
+                $"Expected to be redirected to {expectedPath} but was {currentPath}");
         }
 
         [Test]
         public void Register_WithExistingEmail_ShouldReturnError()
         {
             // Arrange
-            string existingEmail = "existing@yopmail.com";
+            string existingEmail = "test@yopmail.com";
 
             // Act
             authPage.Register.TypeUsername("anotherUser");
@@ -55,14 +58,14 @@ namespace TestFramework.Tests.Functional.AuthPageTests
 
             // Assert
             string error = authPage.Register.GetGlobalErrorMessage();
-            Assert.That(error, Is.Not.Empty, "Expected error for existing email.");
+            Assert.That(error, Is.Not.Empty, "Acest nume de utilizator este deja folosit. Încearcă altul!");
         }
 
         [Test]
         public void Register_WithExistingUsername_ShouldReturnError()
         {
             // Arrange
-            string existingUsername = "existingUser";
+            string existingUsername = "sonic";
 
             // Act
             authPage.Register.TypeUsername(existingUsername);

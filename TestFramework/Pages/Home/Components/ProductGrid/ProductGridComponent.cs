@@ -32,7 +32,7 @@ namespace TestFramework.Pages.Home
                 string authorRaw = card.FindElement(_authorLocator).Text.Trim(); // "Isaac Asimov • 1951"
                 string priceRaw = card.FindElement(_priceLocator).Text.Trim();   // "17.5 €"
 
-                // 1. Separăm Autorul de An
+                // 1. Separăm autorul de an
                 string author = authorRaw;
                 int year = 0;
                 if (authorRaw.Contains('•'))
@@ -42,8 +42,7 @@ namespace TestFramework.Pages.Home
                     int.TryParse(parts[1].Trim(), out year);
                 }
 
-                // 2. Separăm Prețul de Euro (Măsura de siguranță)
-                // Luăm doar prima parte înainte de spațiu sau simbol
+                // 2. Separam pretul de euro si luam doar prima parte
                 string priceClean = priceRaw.Split(' ')[0].Replace("€", "").Replace(",", ".").Trim();
 
                 if (double.TryParse(priceClean, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceValue))
@@ -60,17 +59,10 @@ namespace TestFramework.Pages.Home
             return booksList;
         }
 
-        /// <summary>
-        /// Identifică un card de produs după titlu și apasă butonul "Add to cart".
-        /// </summary>
         public void AddBookToCart(string bookTitle)
         {
-            // Injectam titlul in template
             string finalXpath = string.Format(AddToCartBtnTemplate, bookTitle);
-
-            // Folosim metoda noastra Click care are deja "WaitForElementToBeClickable" inclus
             DriverMgr.Click(By.XPath(finalXpath));
-
             TestContext.Out.WriteLine($"[ACTION] Clicked 'Add to cart' for book: {bookTitle}");
         }
     }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestFramework.Tests.Functional.FavesPage
+namespace TestFramework.Tests.Functional.CartPage
 {
-    internal class FaveTests
+    internal class LoggedInCartTests
     {
     }
 }

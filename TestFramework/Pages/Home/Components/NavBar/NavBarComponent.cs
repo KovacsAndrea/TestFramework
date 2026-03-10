@@ -18,6 +18,8 @@ namespace TestFramework.Pages.Home
         private readonly By _userAvatarLoggedIn = By.Id("nav-bar-user-avatar-logged-in");
         private readonly By _faveBadge = By.Id("//button[@id=\"nav-bar-favorite-icon\"]//span[contains(@class, 'MuiBadge-badge')]");
         private readonly By _cartBadge = By.Id("//button[@id=\"nav-bar-cart-icon\"]//span[contains(@class, 'MuiBadge-badge')]");
+        private readonly By _avatarDropDownProfileButton = By.Id("avatar-drop-down-profile-section");
+        private readonly By _avatarDropDownLogoutButton = By.Id("avatar-drop-down-logout-section");
 
         public NavBarComponent(DriverManager driver) : base(driver) { }
 
@@ -46,6 +48,22 @@ namespace TestFramework.Pages.Home
             DriverMgr.Click(_userAvatarLoggedOut);
         }
 
+        public void clickOnLoggedInUserAvatar()
+        {
+            DriverMgr.Click(_userAvatarLoggedIn);
+        }
+
+        public void navigateToProfile()
+        {
+            DriverMgr.Click(_userAvatarLoggedIn);
+            DriverMgr.Click(_avatarDropDownProfileButton);
+        }
+
+        public void logOut()
+        {
+            DriverMgr.Click(_userAvatarLoggedIn);
+            DriverMgr.Click(_avatarDropDownLogoutButton);
+        }
         public int GetCartBadgeCount()
         {
             return DriverMgr.GetBadgeNumber(_cartBadge);

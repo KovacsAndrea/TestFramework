@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
+using TestFramework.Models;
 
 namespace TestFramework.Pages.Auth
 {
@@ -14,24 +15,19 @@ namespace TestFramework.Pages.Auth
 
         private readonly By _loginTitle = By.Id("login-title");
 
-        // ===== EMAIL =====
         private const string _emailContainer = _container + "/*[2]";
         private readonly By _emailInput = By.XPath(_emailContainer + "//input");
         private readonly By _emailErrorMessage = By.XPath(_emailContainer + "//p");
 
-        // ===== PASSWORD =====
         private const string _passwordContainer = _container + "/*[3]";
         private readonly By _passwordInput = By.XPath(_passwordContainer + "//input");
         private readonly By _showPasswordButton = By.XPath(_passwordContainer + "//button");
         private readonly By _passwordErrorMessage = By.XPath(_passwordContainer + "//p");
 
-        // ===== GLOBAL ELEMENTS =====
         private readonly By _globalErrorMessage = By.Id("login-error-message");
         private readonly By _loginButton = By.Id("login-button");
         private readonly By _registerLink = By.Id("register-link");
         private readonly By _guestLink = By.Id("login-guest-link");
-
-        // ======= GETTERS =======
 
         public string GetLoginTitle()
         {
@@ -52,8 +48,6 @@ namespace TestFramework.Pages.Auth
         {
             return DriverMgr.GetText(_globalErrorMessage);
         }
-
-        // ======= ACTIONS =======
 
         public void TypeEmail(string email)
         {
@@ -85,18 +79,19 @@ namespace TestFramework.Pages.Auth
             DriverMgr.Click(_guestLink);
         }
 
-        // ======= HIGH LEVEL FLOWS =======
-
-        public void Login(string email, string password)
+        public void LoginUser(string email, string password)
         {
             TypeEmail(email);
             TypePassword(password);
             ClickLogin();
         }
 
-        public void LoginWithEmptyFields()
+        public void LoginUser(User user)
         {
+            TypeEmail(user.Email);
+            TypePassword(user.Password);
             ClickLogin();
         }
+
     }
 }

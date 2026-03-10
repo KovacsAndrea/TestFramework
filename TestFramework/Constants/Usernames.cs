@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestFramework.Pages.Faves
+namespace TestFramework.Constants
 {
-    internal class FaveGrid
+    public static class Usernames
     {
+        public const string GenericUsername = "Mock Username";
     }
 }

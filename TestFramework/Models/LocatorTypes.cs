@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestFramework.Tests.Functional.AuthPageTests
+namespace TestFramework.Models
 {
-    internal class LoginTests
+    public enum LocatorType
     {
+        Id,
+        XPath
     }
 }

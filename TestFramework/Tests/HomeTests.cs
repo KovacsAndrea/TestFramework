@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Pages.Auth;
+using TestFramework.Pages.Faves;
 using TestFramework.Pages.Home;
 
 namespace TestFramework.Tests
@@ -194,6 +195,30 @@ namespace TestFramework.Tests
             foreach (var msg in passMessages)
             {
                 TestContext.Out.WriteLine(msg);
+            }
+        }
+
+        [Test]
+        public void FavePageSmokeTest()
+        {
+            AuthPage authPage = new AuthPage(DriverMgr);
+            authPage.Open();
+            authPage.Login.TypeEmail("test@yopmail.com");
+            authPage.Login.TypePassword("BB55%%bbanle");
+
+            authPage.Login.ClickLogin();
+            DriverMgr.Wait(3);
+
+            FavePage favePage = new FavePage(DriverMgr);
+            favePage.Open();
+            DriverMgr.Wait(3);
+
+            var books = favePage.ProductGrid.GetAllFaveBooks();
+
+            foreach (var book in books)
+            {
+                // TestContext.WriteLine e "sfânt" pentru NUnit
+                TestContext.Out.WriteLine($"Carte: {book.Title} | Autor: {book.Author} | An: {book.Year} | Pret: {book.Price} EURO");
             }
         }
     }

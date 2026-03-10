@@ -72,7 +72,11 @@ namespace TestFramework.Drivers
             }
         }
 
-        // Heavy Lifting: Metodă care scrie TEXT doar după ce câmpul e gata
+        public bool IsElementVisible(By locator)
+        {
+            return WaitForElement(locator) != null;
+        }
+
         public void SendKeys(By locator, string text)
         {
             var element = WaitForElementToBeClickable(locator);
@@ -80,14 +84,12 @@ namespace TestFramework.Drivers
             element.SendKeys(text);
         }
 
-        // Heavy Lifting: Click sigur
         public void Click(By locator)
         {
             var element = WaitForElementToBeClickable(locator);
             element.Click();
         }
 
-        // Pentru extragerea de atribute (iconițe, clase CSS)
         public string GetAttribute(By locator, string attribute)
         {
             var element = WaitForElement(locator);
@@ -100,9 +102,6 @@ namespace TestFramework.Drivers
             System.Threading.Thread.Sleep(seconds * 1000);
         }
 
-        /// <summary>
-        /// Misca un slider la dreapta cu un numar specific de pozitii (n).
-        /// </summary>
         public void MoveSliderRight(By locator, int positions)
         {
             var element = WaitForElement(locator);
@@ -112,9 +111,6 @@ namespace TestFramework.Drivers
             }
         }
 
-        /// <summary>
-        /// Misca un slider la stanga cu un numar specific de pozitii (n).
-        /// </summary>
         public void MoveSliderLeft(By locator, int position)
         {
             var element = WaitForElement(locator);
@@ -133,14 +129,12 @@ namespace TestFramework.Drivers
         public int GetBadgeNumber(By locator)
         {
             var badge = FindElement(locator);
-
-            // Verificăm dacă am găsit ceva și dacă are text
             if (badge != null && !string.IsNullOrEmpty(badge.Text))
             {
                 return int.TryParse(badge.Text.Trim(), out int result) ? result : 0;
             }
 
-            return 0; // Dacă badge-ul e null, coșul e clar gol
+            return 0; 
         }
 
         public void MoveSliderToValue(By sliderLocator, By labelLocator, int targetValue, string directionKey)

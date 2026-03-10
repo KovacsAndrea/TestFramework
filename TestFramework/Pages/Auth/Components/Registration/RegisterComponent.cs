@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestFramework.Drivers;
+using TestFramework.Models;
 
 namespace TestFramework.Pages.Auth
 {
@@ -30,6 +31,7 @@ namespace TestFramework.Pages.Auth
         private readonly By _showPasswordButton = By.XPath(_passwordContainer + "//button");
         private readonly By _passwordPassMessages = By.XPath(_passwordContainer + "//div[contains(@class,'password-dropdown')]/p[contains(@class,'ok')]");
         private readonly By _passwordFailMessages = By.XPath(_passwordContainer + "//div[contains(@class,'password-dropdown')]/p[contains(@class,'error')]");
+        private readonly By _passwordErrorMessage = By.XPath(_passwordContainer + "//p");
 
         // ===== CONFIRM PASSWORD =====
         private const string _confirmPasswordContainer = _container + "/*[5]";
@@ -43,99 +45,119 @@ namespace TestFramework.Pages.Auth
         private readonly By _guestLink = By.Id("register-guest-link");
 
         // ===== EMAIL =====
-            public void TypeEmail(string email)
-            {
-                DriverMgr.SendKeys(_emailInput, email);
-            }
+        public void TypeEmail(string email)
+        {
+            DriverMgr.SendKeys(_emailInput, email);
+        }
 
-            public string GetEmailErrorMessage()
-            {
-                return DriverMgr.GetText(_emailErrorMessage);
-            }
+        public string GetEmailErrorMessage()
+        {
+            return DriverMgr.GetText(_emailErrorMessage);
+        }
 
-            // ===== USERNAME =====
-            public void TypeUsername(string username)
-            {
-                DriverMgr.SendKeys(_usernameInput, username);
-            }
+        // ===== USERNAME =====
+        public void TypeUsername(string username)
+        {
+            DriverMgr.SendKeys(_usernameInput, username);
+        }
 
-            public string GetUsernameErrorMessage()
-            {
-                return DriverMgr.GetText(_usernameErrorMessage);
-            }
+        public string GetUsernameErrorMessage()
+        {
+            return DriverMgr.GetText(_usernameErrorMessage);
+        }
 
-            // ===== PASSWORD =====
-            public void TypePassword(string password)
-            {
-                DriverMgr.SendKeys(_passwordInput, password);
-            }
+        // ===== PASSWORD =====
+        public void TypePassword(string password)
+        {
+            DriverMgr.SendKeys(_passwordInput, password);
+        }
 
-            public void ClickShowPassword()
-            {
-                DriverMgr.Click(_showPasswordButton);
-            }
+        public void ClickShowPassword()
+        {
+            DriverMgr.Click(_showPasswordButton);
+        }
 
-            public IReadOnlyCollection<string> GetPasswordFailMessages()
-            {
-                var elements = DriverMgr.FindElements(_passwordFailMessages);
-                return elements.Select(e => e.Text.Trim()).ToList().AsReadOnly();
-            }
+        public string GetPasswordError()
+        {
+            return DriverMgr.GetText(_passwordErrorMessage);
+        }
 
-            public IReadOnlyCollection<string> GetPasswordPassMessages()
-            {
-                var elements = DriverMgr.FindElements(_passwordPassMessages);
-                return elements.Select(e => e.Text.Trim()).ToList().AsReadOnly();
-            }
+        public IReadOnlyCollection<string> GetPasswordFailMessages()
+        {
+            var elements = DriverMgr.FindElements(_passwordFailMessages);
+            return elements.Select(e => e.Text.Trim()).ToList().AsReadOnly();
+        }
+
+        public IReadOnlyCollection<string> GetPasswordPassMessages()
+        {
+            var elements = DriverMgr.FindElements(_passwordPassMessages);
+            return elements.Select(e => e.Text.Trim()).ToList().AsReadOnly();
+        }
 
         // ===== CONFIRM PASSWORD =====
         public void TypeConfirmPassword(string password)
-            {
-                DriverMgr.SendKeys(_confirmPasswordInput, password);
-            }
-
-            public string GetConfirmPasswordErrorMessage()
-            {
-                return DriverMgr.GetText(_confirmPasswordErrorMessage);
-            }
-
-            // ===== GLOBAL =====
-            public void ClickRegister()
-            {
-                DriverMgr.Click(_registerButton);
-            }
-
-            public string GetGlobalErrorMessage()
-            {
-                return DriverMgr.GetText(_globalErrorMessage);
-            }
-
-            public void ClickLoginLink()
-            {
-                DriverMgr.Click(_loginLink);
-            }
-
-            public void ClickGuestLink()
-            {
-                DriverMgr.Click(_guestLink);
-            }
-
-            // ============================================================
-            // ====================== HIGH LEVEL ==========================
-            // ============================================================
-
-            public void FillRegisterForm(string email, string username, string password, string confirmPassword)
-            {
-                TypeEmail(email);
-                TypeUsername(username);
-                TypePassword(password);
-                TypeConfirmPassword(confirmPassword);
-            }
-
-            public void Register(string email, string username, string password, string confirmPassword)
-            {
-                FillRegisterForm(email, username, password, confirmPassword);
-                ClickRegister();
-            }
-
+        {
+            DriverMgr.SendKeys(_confirmPasswordInput, password);
         }
+
+        public string GetConfirmPasswordErrorMessage()
+        {
+            return DriverMgr.GetText(_confirmPasswordErrorMessage);
+        }
+
+        // ===== GLOBAL =====
+        public void ClickRegister()
+        {
+            DriverMgr.Click(_registerButton);
+        }
+
+        public string GetGlobalErrorMessage()
+        {
+            return DriverMgr.GetText(_globalErrorMessage);
+        }
+
+        public void ClickLoginLink()
+        {
+            DriverMgr.Click(_loginLink);
+        }
+
+        public void ClickGuestLink()
+        {
+            DriverMgr.Click(_guestLink);
+        }
+
+        // ============================================================
+        // ====================== HIGH LEVEL ==========================
+        // ============================================================
+
+        public void FillRegisterForm(string email, string username, string password, string confirmPassword)
+        {
+            TypeEmail(email);
+            TypeUsername(username);
+            TypePassword(password);
+            TypeConfirmPassword(confirmPassword);
+        }
+
+        public void FillRegisterForm(User user)
+        {
+            TypeEmail(user.Email);
+            TypeUsername(user.Username);
+            TypePassword(user.Password);
+            TypeConfirmPassword(user.Password);
+        }
+
+        public void RegisterUser(string email, string username, string password, string confirmPassword)
+        {
+            FillRegisterForm(email, username, password, confirmPassword);
+            ClickRegister();
+        }
+
+        public void RegisterUser(User user)
+        {
+            FillRegisterForm(user);
+            ClickRegister();
+        }
+
+
+    }
     }

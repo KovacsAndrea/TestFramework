@@ -15,7 +15,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="ExtentReports" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NUnit" Version="4.4.0" />
     <PackageReference Include="NUnit.Analyzers" Version="4.11.2">
       <PrivateAssets>all</PrivateAssets>
@@ -32,14 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Reports\" />
+    <Folder Include="Reports\TestReports\" />
     <Folder Include="Tests\Integration\LoginTestFlow\" />
     <Folder Include="Tests\Integration\CheckoutTestFlow\" />
     <Folder Include="Tests\Integration\BrowsingTestFlow\" />
-    <Folder Include="Tests\Integration\FavesTestFlow\" />
-    <Folder Include="Tests\Integration\AccountTestFlow\" />
     <Folder Include="Tests\Integration\RegistrationTestFlow\" />
-    <Folder Include="Utilities\" />
   </ItemGroup>
 
 </Project>

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestFramework.Tests.Functional.CartPage
+namespace TestFramework.Tests.Functional.HomeTests
 {
-    internal class CartTests
+    internal class HomeSideMenuTests
     {
     }
 }

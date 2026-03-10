@@ -55,9 +55,13 @@
               "target": "Package",
               "version": "[3.11.0, )"
             },
+            "ExtentReports": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[18.0.1, )"
+              "version": "[17.8.0, )"
             },
             "NUnit": {
               "target": "Package",

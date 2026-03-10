@@ -7,7 +7,6 @@ namespace TestFramework.Pages.Home
     {
         private readonly string _basePath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
 
-        // Componenta este privată, accesibilă prin proprietate
         private SearchBarComponent _searchBar = null!;
         private NavBarComponent _navBar = null!;
         private HomeSidemenuComponent _sideMenu = null!;
@@ -22,7 +21,6 @@ namespace TestFramework.Pages.Home
             DriverMgr.GoToUrl(_basePath);
         }
 
-        // Metodă de flux (High Level)
         public void PerformFullSearch(string text)
         {
             SearchBar.TypeSearchText(text);

@@ -15,7 +15,7 @@ namespace TestFramework.Pages.Faves
         private readonly string _basePath = AppRoutes.LocalPath + AppRoutes.FavePageRoute;
         private FaveGridComponent _productGrid = null!;
         private SideMenuComponent _sideMenu = null!;
-        public FaveGridComponent ProductGrid => _productGrid ??= new FaveGridComponent(DriverMgr);
+        public FaveGridComponent FaveGrid => _productGrid ??= new FaveGridComponent(DriverMgr);
         public SideMenuComponent SideMenu => _sideMenu ??= new SideMenuComponent(DriverMgr);  
         public void Open()
         {

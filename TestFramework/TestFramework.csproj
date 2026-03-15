@@ -33,11 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Reports\TestReports\" />
-    <Folder Include="Tests\Integration\LoginTestFlow\" />
-    <Folder Include="Tests\Integration\CheckoutTestFlow\" />
-    <Folder Include="Tests\Integration\BrowsingTestFlow\" />
-    <Folder Include="Tests\Integration\RegistrationTestFlow\" />
+    <Folder Include="Tests\Functional\NavBarTests\" />
+    <Folder Include="Tests\Integration\04_CheckoutTestFlow\" />
+    <Folder Include="Tests\Integration\02_BrowsingTestFlow\" />
   </ItemGroup>
 
 </Project>

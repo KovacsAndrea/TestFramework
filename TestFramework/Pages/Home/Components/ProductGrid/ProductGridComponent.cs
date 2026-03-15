@@ -19,8 +19,12 @@ namespace TestFramework.Pages.Home
         private readonly By _titleLocator = By.ClassName("book-title");
         private readonly By _authorLocator = By.ClassName("book-author");
         private readonly By _priceLocator = By.ClassName("book-price");
-        private const string AddToCartBtnTemplate = "//p[text()=\"{0}\"]/ancestor::div[contains(@class, ' book-card ')]//button[contains(text(), 'Add to cart')]";
-
+        private const string AddToCartBtnTemplate = 
+            "//p[text()=\"{0}\"]/ancestor::div[contains(@class, ' book-card ')]//button[contains(text(), 'Add to cart')]";
+        private const string AddToFavoritesBtnTemplate =
+            "//p[text()=\"{0}\"]/ancestor::div[contains(@class,'book-card')]//button[contains(@class,'favorite') or contains(@aria-label,'favorite')]";
+        private readonly By _favoriteButton = By.XPath(".//button[contains(@class,'favorite') or contains(@aria-label,'favorite')]");
+        private readonly By _addToCartButton = By.XPath(".//button[contains(text(),'Add to cart')]");
         public List<BookModel> GetAllBooks()
         {
             var cardElements = DriverMgr.FindElements(_bookCards);
@@ -29,10 +33,9 @@ namespace TestFramework.Pages.Home
             foreach (var card in cardElements)
             {
                 string title = card.FindElement(_titleLocator).Text.Trim();
-                string authorRaw = card.FindElement(_authorLocator).Text.Trim(); // "Isaac Asimov • 1951"
-                string priceRaw = card.FindElement(_priceLocator).Text.Trim();   // "17.5 €"
+                string authorRaw = card.FindElement(_authorLocator).Text.Trim();
+                string priceRaw = card.FindElement(_priceLocator).Text.Trim(); 
 
-                // 1. Separăm autorul de an
                 string author = authorRaw;
                 int year = 0;
                 if (authorRaw.Contains('•'))
@@ -42,7 +45,7 @@ namespace TestFramework.Pages.Home
                     int.TryParse(parts[1].Trim(), out year);
                 }
 
-                // 2. Separam pretul de euro si luam doar prima parte
+                
                 string priceClean = priceRaw.Split(' ')[0].Replace("€", "").Replace(",", ".").Trim();
 
                 if (double.TryParse(priceClean, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceValue))
@@ -59,11 +62,46 @@ namespace TestFramework.Pages.Home
             return booksList;
         }
 
-        public void AddBookToCart(string bookTitle)
+        public string AddBookToCart(string bookTitle)
         {
             string finalXpath = string.Format(AddToCartBtnTemplate, bookTitle);
             DriverMgr.Click(By.XPath(finalXpath));
-            TestContext.Out.WriteLine($"[ACTION] Clicked 'Add to cart' for book: {bookTitle}");
+            return $"[ACTION] Clicked 'Add to cart' for book: {bookTitle}";
+        }
+
+        public string AddNthBookToCart(int n)
+        {
+            var cards = DriverMgr.FindElements(_bookCards).ToList(); 
+            if (n < 1 || n > cards.Count)
+                throw new ArgumentOutOfRangeException(nameof(n), $"There are only {cards.Count} books in the grid.");
+
+            var card = cards[n - 1]; 
+
+            card.FindElement(_addToCartButton).Click();
+
+            return $"[ACTION] Added book #{n} to cart: {card.FindElement(_titleLocator).Text}";
+        }
+
+        public string ClickFavoriteIconOnProduct(string bookTitle)
+        {
+            string finalXpath = string.Format(AddToFavoritesBtnTemplate, bookTitle);
+            DriverMgr.Click(By.XPath(finalXpath));
+
+            return $"[ACTION] Added book to favorites: {bookTitle}";
+        }
+
+        public string ClickFavoriteOnNthProduct(int n)
+        {
+            var cards = DriverMgr.FindElements(_bookCards).ToList();
+
+            if (n < 1 || n > cards.Count)
+                throw new ArgumentOutOfRangeException(nameof(n), $"There are only {cards.Count} books in the grid.");
+
+            var title = cards[n - 1].FindElement(_titleLocator).Text;
+
+            cards[n - 1].FindElement(_favoriteButton).Click();
+
+            return $"[ACTION] Added book #{n} to favorites: {title}";
         }
     }
 }

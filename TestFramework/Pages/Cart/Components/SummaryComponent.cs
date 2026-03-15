@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestFramework.Drivers;
 
 namespace TestFramework.Pages.Cart.Components
 {
-    internal class SummaryComponent
+    public class SummaryComponent(DriverManager driver): BasePage(driver)
     {
     }
 }

@@ -8,12 +8,10 @@ namespace TestFramework.Pages.Home
         private readonly string _basePath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
 
         private SearchBarComponent _searchBar = null!;
-        private NavBarComponent _navBar = null!;
         private HomeSidemenuComponent _sideMenu = null!;
         private ProductGridComponent _productGrid = null!;
 
         public SearchBarComponent SearchBar => _searchBar ??= new SearchBarComponent(DriverMgr);
-        public NavBarComponent NavBar => _navBar ??= new NavBarComponent(DriverMgr);
         public HomeSidemenuComponent SideMenu => _sideMenu ??= new HomeSidemenuComponent(DriverMgr);
         public ProductGridComponent ProductGrid => _productGrid ??= new ProductGridComponent(DriverMgr);
         public void Open()

@@ -17,7 +17,6 @@ namespace TestFramework.Reports.Manager
 
             string reportPath = Path.Combine(reportDir, "index.html");
 
-            // Folosim numele complet ca să forțăm compilatorul să-l găsească
             var spark = new AventStack.ExtentReports.Reporter.ExtentSparkReporter(reportPath);
 
             _extent = new AventStack.ExtentReports.ExtentReports();
@@ -27,6 +26,12 @@ namespace TestFramework.Reports.Manager
         public static void CreateTest(string testName)
         {
             if (_extent == null) InitReport();
+
+            if (Test != null && Test.Model.Name == testName)
+            {
+                return;
+            }
+
             Test = _extent.CreateTest(testName);
         }
 

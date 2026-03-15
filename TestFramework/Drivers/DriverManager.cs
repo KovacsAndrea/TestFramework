@@ -128,9 +128,10 @@ namespace TestFramework.Drivers
 
         public int GetBadgeNumber(By locator)
         {
-            var badge = FindElement(locator);
+            var badge = WaitForElement(locator);
             if (badge != null && !string.IsNullOrEmpty(badge.Text))
             {
+                TestContext.Out.WriteLine(badge.Text);
                 return int.TryParse(badge.Text.Trim(), out int result) ? result : 0;
             }
 
@@ -161,13 +162,33 @@ namespace TestFramework.Drivers
             }
         }
 
-        public string GetUrl()
-        {
-            return _driver.Url;
-        }
-
+        public string GetUrl() { return _driver.Url; }
         public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);
         public void QuitBrowser() { _driver?.Quit(); _driver?.Dispose(); }
+
+        public string TakeScreenshot(string testName)
+        {
+            string screenshotDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", "Screenshots");
+            if (!Directory.Exists(screenshotDir)) Directory.CreateDirectory(screenshotDir);
+
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                testName = testName.Replace(c, '_');
+            }
+
+            string fileName = $"{testName}_{DateTime.Now:HHmmss}.png";
+            string filePath = Path.Combine(screenshotDir, fileName);
+
+            Screenshot screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
+            screenshot.SaveAsFile(filePath);
+
+            return Path.Combine("Screenshots", fileName);
+        }
+
+        public void Refresh()
+        {
+            _driver.Navigate().Refresh();
+        }
 
     }
 }

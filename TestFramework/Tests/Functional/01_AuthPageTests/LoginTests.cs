@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using TestFramework.Constants;
-using TestFramework.Models;
 using TestFramework.Pages.Auth;
-using TestFramework.Utilities;
 using TestFramework.Reports.Manager;
 
 namespace TestFramework.Tests.Functional.AuthPageTests
 {
+    [TestFixture]
+    [Category("Functional | Auth Page | Login")]
     public class LoginTests : BaseTest
     {
         private AuthPage authPage;
@@ -20,12 +16,13 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [SetUp]
         public void Setup()
         {
-            ReportManager.CreateTest(TestContext.CurrentContext.Test.Name);
-
             authPage = new AuthPage(DriverMgr);
+
+            ReportManager.Test.Info("Se initializeaza pagina de autentificare.");
             authPage.Open();
-            ReportManager.Test.Info("Auth page opened");
             DriverMgr.Wait(1);
+
+            ReportManager.Test.Info("Pagina de login a fost deschisa cu succes.");
         }
         #endregion
 
@@ -33,21 +30,14 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [Test]
         public void Login_ClickingVisitAsGuest_ShouldRedirectToHome()
         {
-            // Act
-            ReportManager.Test.Info("Clicking guest link");
+            ReportManager.Test.Info("Se incearca login ca vizitator (Guest).");
+
             authPage.Login.ClickGuestLink();
             DriverMgr.Wait(1);
 
-            // Assert
-            string expectedPath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
-            string currentPath = DriverMgr.GetUrl();
+            ReportManager.Test.Info("S-a dat click pe link-ul 'Visit as Guest'.");
 
-            ReportManager.Test.Info($"Expected URL: {expectedPath}");
-            ReportManager.Test.Info($"Current URL: {currentPath}");
-
-            Assert.That(currentPath, Is.EqualTo(expectedPath));
-
-            ReportManager.Test.Pass("User successfully redirected to home page");
+            AssertRedirect(AppRoutes.HomePageRoute);
         }
         #endregion
 
@@ -58,45 +48,24 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [TestCase(Emails.InvalidDomainFormat)]
         public void Login_WithInvalidEmail_ShouldReturnError(string invalidEmail)
         {
-            // Act
-            ReportManager.Test.Info($"Attempting login with invalid email: {invalidEmail}");
+            ReportManager.Test.Info($"Introducere email invalid: {invalidEmail}");
 
-            authPage.Login.LoginUser(
-                invalidEmail,
-                Passwords.ValidPassword);
-
+            authPage.Login.LoginUser(invalidEmail, Passwords.ValidPassword);
             DriverMgr.Wait(2);
 
-            // Assert
-            string emailError = authPage.Login.GetEmailErrorMessage();
-
-            ReportManager.Test.Info($"Email error message returned: {emailError}");
-
-            Assert.That(emailError, Is.EqualTo(ErrorMessages.LoginInvalidEmail));
-
-            ReportManager.Test.Pass("Correct validation message displayed for invalid email");
+            AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.LoginInvalidEmail, "email");
         }
 
         [Test]
         public void Login_WithMissingFields_ShouldReturnError()
         {
-            // Act
-            ReportManager.Test.Info("Attempting login with missing fields");
+            ReportManager.Test.Info("Click pe Login fara a completa campurile.");
 
             authPage.Login.ClickLogin();
             DriverMgr.Wait(2);
 
-            // Assert
-            string emailError = authPage.Login.GetEmailErrorMessage();
-            string passwordError = authPage.Login.GetPasswordErrorMessage();
-
-            ReportManager.Test.Info($"Email error: {emailError}");
-            ReportManager.Test.Info($"Password error: {passwordError}");
-
-            Assert.That(emailError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
-            Assert.That(passwordError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
-
-            ReportManager.Test.Pass("Validation messages displayed for missing fields");
+            AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "email");
+            AssertFieldError(authPage.Login.GetPasswordErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "password");
         }
         #endregion
     }

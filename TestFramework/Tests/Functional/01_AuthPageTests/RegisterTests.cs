@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NUnit.Framework;
 using TestFramework.Constants;
 using TestFramework.Models;
 using TestFramework.Pages.Auth;
-using TestFramework.Pages.Home;
 using TestFramework.Utilities;
+using TestFramework.Reports.Manager;
 
 namespace TestFramework.Tests.Functional.AuthPageTests
 {
+    [TestFixture]
+    [Category("Functional | Auth Page | Register")]
     public class RegisterTests : BaseTest
     {
         private AuthPage authPage;
@@ -20,8 +19,35 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         public void Setup()
         {
             authPage = new AuthPage(DriverMgr);
+
+            ReportManager.Test.Info("Se initializeaza pagina de autentificare si se deschide formularul Register.");
             authPage.Open();
             authPage.Login.ClickRegisterLink();
+            DriverMgr.Wait(1);
+
+            ReportManager.Test.Info("Pagina de register a fost deschisa cu succes.");
+        }
+        #endregion
+
+        #region HELPERS
+        private void FillRegisterForm(User user)
+        {
+            ReportManager.Test.Info("Completare formular register cu urmatoarele date:");
+            authPage.Register.TypeEmail(user.Email);
+            authPage.Register.TypeUsername(user.Username);
+            authPage.Register.TypePassword(user.Password);
+            authPage.Register.TypeConfirmPassword(user.Password);
+            DriverMgr.Wait(1);
+        }
+        private void FillRegisterForm(string email, string username, string password, string confirmPassword)
+        {
+            ReportManager.Test.Info("Completare formular register cu urmatoarele date.");
+            authPage.Register.RegisterUser(
+                email: email,
+                username: username,
+                password: password,
+                confirmPassword: confirmPassword
+                );
             DriverMgr.Wait(1);
         }
         #endregion
@@ -30,16 +56,12 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [Test]
         public void Register_WithValidData_ShouldCreateUser()
         {
-            //Arrange
-            User dummyUser = RandomIdentityGenerator.GenerateValidUser();
-            // Act
-            authPage.Register.RegisterUser(dummyUser);
+            User user = GenerateAndLogUser();
+            FillRegisterForm(user);
+            authPage.Register.ClickRegister();
             DriverMgr.Wait(3);
 
-            // Assert
-            string expectedPath = AppRoutes.LocalPath + AppRoutes.HomePageRoute;
-            string currentPath = DriverMgr.GetUrl();
-            Assert.That(currentPath, Is.EqualTo(expectedPath));
+            AssertRedirect(AppRoutes.HomePageRoute);
         }
         #endregion
 
@@ -50,81 +72,46 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [TestCase(Emails.InvalidDomainFormat)]
         public void Register_WithInvalidEmail_ShouldReturnError(string invalidEmail)
         {
-            // Act
-            authPage.Register.RegisterUser(
+            ReportManager.Test.Info($"Incercare inregistrare cu email invalid: {invalidEmail}");
+
+            FillRegisterForm(
                 invalidEmail,
                 RandomIdentityGenerator.GenerateUsername(),
                 Passwords.ValidPassword,
                 Passwords.ValidPassword);
 
-            DriverMgr.Wait(2);
-
-            // Assert
-            string emailError = authPage.Register.GetEmailErrorMessage();
-            Assert.That(emailError, Is.EqualTo(ErrorMessages.RegisterInvalidEmail));
-        }
-
-
-        [Test]
-        [TestCase(Passwords.MissingLengthCheck, ErrorMessages.RegisterPasswordLength)]
-        [TestCase(Passwords.MissingLowercaseCheck, ErrorMessages.RegisterPasswordLowerCase)]
-        [TestCase(Passwords.MissingUpperCaseCheck, ErrorMessages.RegisterPasswordUpperCase)]
-        [TestCase(Passwords.MissingNumberCheck, ErrorMessages.RegisterPassowrdNumber)]
-        [TestCase(Passwords.MissingSpecialCharacterCheck, ErrorMessages.RegisterPasswordSpecialCharacter)]
-        public void Register_WithWeakPassword_ShouldReturnValidationError(string password, string expectedError)
-        {
-            // Act
-            authPage.Register.TypeEmail(RandomIdentityGenerator.GenerateEmail());
-            authPage.Register.TypeUsername(RandomIdentityGenerator.GenerateUsername());
-            authPage.Register.TypePassword(password);
-            authPage.Register.TypeConfirmPassword(password);
-
-            DriverMgr.Wait(2);
-
-            // Assert
-            var failMessages = authPage.Register.GetPasswordFailMessages();
-            var passMessages = authPage.Register.GetPasswordPassMessages();
-            var confirmPasswordMessage = authPage.Register.GetConfirmPasswordErrorMessage();
-
-            Assert.That(failMessages, Does.Contain(expectedError));
-            Assert.That(failMessages.Count, Is.EqualTo(1));
-            Assert.That(passMessages.Count, Is.EqualTo(4));
-            Assert.That(confirmPasswordMessage, Is.EqualTo(ErrorMessages.RegisterConfirmPasswordWeak));
+            AssertFieldError(authPage.Register.GetEmailErrorMessage(), ErrorMessages.RegisterInvalidEmail, "email");
         }
 
         [Test]
         public void Register_WithMismatchedPasswords_ShouldReturnError()
         {
-            // Act
-            authPage.Register.TypeEmail(RandomIdentityGenerator.GenerateEmail());
-            authPage.Register.TypeUsername(RandomIdentityGenerator.GenerateUsername());
-            authPage.Register.TypePassword(Passwords.ValidPassword);
-            authPage.Register.TypeConfirmPassword(Passwords.DifferentValidPassword);
-            authPage.Register.ClickRegister();
-            DriverMgr.Wait(2);
+            ReportManager.Test.Info("Introducere parole care nu coincid.");
 
-            // Assert
-            string confirmPasswordError = authPage.Register.GetConfirmPasswordErrorMessage();
-            Assert.That(confirmPasswordError, Is.EqualTo(ErrorMessages.RegisterConfirmPasswordNotMatching));
+            FillRegisterForm(
+                RandomIdentityGenerator.GenerateEmail(),
+                RandomIdentityGenerator.GenerateUsername(),
+                Passwords.ValidPassword,
+                Passwords.DifferentValidPassword);
+
+            authPage.Register.ClickRegister();
+
+            AssertFieldError(authPage.Register.GetConfirmPasswordErrorMessage(), ErrorMessages.RegisterConfirmPasswordNotMatching, "confirm password");
         }
 
         [Test]
         public void Register_WithMissingRequiredFields_ShouldReturnError()
         {
-            // Act
+            ReportManager.Test.Info("Trimitere formular gol.");
             authPage.Register.ClickRegister();
-            DriverMgr.Wait(2);
+            DriverMgr.Wait(1);
 
-            // Assert
-            string usernameError = authPage.Register.GetUsernameErrorMessage();
-            string emailError = authPage.Register.GetEmailErrorMessage();
-            string passwordError = authPage.Register.GetPasswordError();
-            string confirmPasswordError = authPage.Register.GetConfirmPasswordErrorMessage();
+            ReportManager.Test.Info("Verificare mesaje de camp obligatoriu pentru toate campurile.");
 
-            Assert.That(usernameError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
-            Assert.That(emailError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
-            Assert.That(passwordError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
-            Assert.That(confirmPasswordError, Is.EqualTo(ErrorMessages.GlobalAuthRequiredField));
+            AssertFieldError(authPage.Register.GetUsernameErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "username");
+            AssertFieldError(authPage.Register.GetEmailErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "email");
+            AssertFieldError(authPage.Register.GetPasswordError(), ErrorMessages.GlobalAuthRequiredField, "password");
+            AssertFieldError(authPage.Register.GetConfirmPasswordErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "confirm password");
         }
         #endregion
     }

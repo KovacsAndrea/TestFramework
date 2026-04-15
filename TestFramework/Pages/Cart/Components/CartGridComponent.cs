@@ -24,10 +24,10 @@ namespace TestFramework.Pages.Cart.Components
         private const string AddToFavoritesBtnTemplate =
             "//p[text()='{0}']/ancestor::div[contains(@id,'cart-card')]//button[contains(@id,'cart-card-favorite-button')]";
 
-        public List<BookModel> GetAllBooks()
+        public List<Book> GetAllBooks()
         {
             var cardElements = DriverMgr.FindElements(_cartBooks);
-            var booksList = new List<BookModel>();
+            var booksList = new List<Book>();
 
             foreach (var card in cardElements)
             {
@@ -49,7 +49,7 @@ namespace TestFramework.Pages.Cart.Components
 
                 if (double.TryParse(priceClean, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceValue))
                 {
-                    booksList.Add(new BookModel
+                    booksList.Add(new Book
                     {
                         Title = title,
                         Author = author,

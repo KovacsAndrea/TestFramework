@@ -26,6 +26,5 @@ namespace TestFramework.Constants
         public const string BillingDetailsRoute = "/billing-details";
         public const string SafetySettingsRoute = "/safety-settings";
     }
-
 }
 

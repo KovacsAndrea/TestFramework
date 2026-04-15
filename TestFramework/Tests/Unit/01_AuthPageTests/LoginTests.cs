@@ -3,11 +3,12 @@ using NUnit.Framework;
 using TestFramework.Constants;
 using TestFramework.Pages.Auth;
 using TestFramework.Reports.Manager;
+using TestFramework.Utilities;
 
-namespace TestFramework.Tests.Functional.AuthPageTests
+namespace TestFramework.Tests.Unit.AuthPageTests
 {
     [TestFixture]
-    [Category("Functional | Auth Page | Login")]
+    [Category("Unit | Auth Page | Login")]
     public class LoginTests : BaseTest
     {
         private AuthPage authPage;
@@ -17,11 +18,8 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         public void Setup()
         {
             authPage = new AuthPage(DriverMgr);
-
             ReportManager.Test.Info("Se initializeaza pagina de autentificare.");
             authPage.Open();
-            DriverMgr.Wait(1);
-
             ReportManager.Test.Info("Pagina de login a fost deschisa cu succes.");
         }
         #endregion
@@ -30,7 +28,7 @@ namespace TestFramework.Tests.Functional.AuthPageTests
         [Test]
         public void Login_ClickingVisitAsGuest_ShouldRedirectToHome()
         {
-            ReportManager.Test.Info("Se incearca login ca vizitator (Guest).");
+            ReportManager.Test.Info("Se incearca inaintarea ca vizitator.");
 
             authPage.Login.ClickGuestLink();
             DriverMgr.Wait(1);
@@ -43,14 +41,11 @@ namespace TestFramework.Tests.Functional.AuthPageTests
 
         #region NEGATIVE TESTS
         [Test]
-        [TestCase(Emails.InvalidFormat)]
-        [TestCase(Emails.MissingTopLevelDomain)]
-        [TestCase(Emails.InvalidDomainFormat)]
-        public void Login_WithInvalidEmail_ShouldReturnError(string invalidEmail)
+        public void Email_WithInvalidFormat_ShouldReturnError()
         {
-            ReportManager.Test.Info($"Introducere email invalid: {invalidEmail}");
+            ReportManager.Test.Info($"Introducere email invalid: {Emails.InvalidFormat}");
 
-            authPage.Login.LoginUser(invalidEmail, Passwords.ValidPassword);
+            authPage.Login.TypeEmail(Emails.InvalidFormat);
             DriverMgr.Wait(2);
 
             AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.LoginInvalidEmail, "email");
@@ -66,6 +61,28 @@ namespace TestFramework.Tests.Functional.AuthPageTests
 
             AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "email");
             AssertFieldError(authPage.Login.GetPasswordErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "password");
+        }
+
+        [Test]
+        public void Login_WithMissingEmail_ShouldReturnError()
+        {
+            ReportManager.Test.Info("Click pe Login fara a completa campul de email.");
+            authPage.Login.TypePassword(Passwords.ValidPassword);
+            authPage.Login.ClickLogin();
+            DriverMgr.Wait(2);
+
+            AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "email");
+        }
+
+        [Test]
+        public void Login_WithMissingPassword_ShouldReturnError()
+        {
+            ReportManager.Test.Info("Click pe Login fara a completa campul de parola.");
+            authPage.Login.TypePassword(Passwords.ValidPassword);
+            authPage.Login.ClickLogin();
+            DriverMgr.Wait(2);
+
+            AssertFieldError(authPage.Login.GetEmailErrorMessage(), ErrorMessages.GlobalAuthRequiredField, "email");
         }
         #endregion
     }

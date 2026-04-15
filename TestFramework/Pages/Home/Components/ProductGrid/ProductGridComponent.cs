@@ -25,10 +25,10 @@ namespace TestFramework.Pages.Home
             "//p[text()=\"{0}\"]/ancestor::div[contains(@class,'book-card')]//button[contains(@class,'favorite') or contains(@aria-label,'favorite')]";
         private readonly By _favoriteButton = By.XPath(".//button[contains(@class,'favorite') or contains(@aria-label,'favorite')]");
         private readonly By _addToCartButton = By.XPath(".//button[contains(text(),'Add to cart')]");
-        public List<BookModel> GetAllBooks()
+        public List<Book> GetAllBooks()
         {
             var cardElements = DriverMgr.FindElements(_bookCards);
-            var booksList = new List<BookModel>();
+            var booksList = new List<Book>();
 
             foreach (var card in cardElements)
             {
@@ -50,7 +50,7 @@ namespace TestFramework.Pages.Home
 
                 if (double.TryParse(priceClean, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceValue))
                 {
-                    booksList.Add(new BookModel
+                    booksList.Add(new Book
                     {
                         Title = title,
                         Author = author,

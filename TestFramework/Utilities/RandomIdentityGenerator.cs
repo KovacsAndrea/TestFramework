@@ -37,7 +37,7 @@ namespace TestFramework.Utilities
             {
                 var adj = Adjectives[_random.Next(Adjectives.Length)];
                 var noun = Nouns[_random.Next(Nouns.Length)];
-                var number = _random.Next(1000, 9999);
+                var number = _random.Next(1000, 9999999);
 
                 username = $"{adj}-{noun}-{number}";
             }
@@ -56,7 +56,7 @@ namespace TestFramework.Utilities
             {
                 var adj = Adjectives[_random.Next(Adjectives.Length)];
                 var noun = Nouns[_random.Next(Nouns.Length)];
-                var number = _random.Next(10000, 99999);
+                var number = _random.Next(10000, 99999999);
 
                 email = $"{adj}.{noun}.{number}@gmail.com";
             }

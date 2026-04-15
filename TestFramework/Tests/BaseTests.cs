@@ -62,6 +62,21 @@ namespace TestFramework.Tests
             ReportManager.Test.Info($"Mesajul de eroare pentru {field} este corect.");
         }
 
+        protected void AssertNoFieldError(string actual, string field)
+        {
+            ReportManager.Test.Info($"Se verifica lipsa mesajului de eroare pentru {field}.");
+            ReportManager.Test.Info($"Mesaj afisat: {actual}");
+
+            if (!string.IsNullOrEmpty(actual))
+            {
+                string message = $"A fost afisat un mesaj de eroare neasteptat pentru {field}: {actual}";
+                ReportManager.Test.Fail(message);
+                Assert.Fail(message);
+            }
+
+            ReportManager.Test.Info($"Nu exista mesaj de eroare pentru {field}, comportamentul este corect.");
+        }
+
 
         protected void AssertMessage(string actualMessage, string expectedMessage)
         {
@@ -125,7 +140,7 @@ namespace TestFramework.Tests
                 {
                     string screenshotPath = DriverMgr.TakeScreenshot(TestContext.CurrentContext.Test.Name);
 
-                    ReportManager.Test.Fail($"<b>Test Failed!</b><br>Error: {errorMessage}",
+                    ReportManager.Test.Fail($"<b>Testul a esuat.</b><br>Error: {errorMessage}",
                         AventStack.ExtentReports.MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
 
                     if (!string.IsNullOrEmpty(stackTrace))

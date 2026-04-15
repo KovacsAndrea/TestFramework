@@ -31,9 +31,9 @@ namespace TestFramework.Pages.Faves
         private readonly By _emptyFavesTitleByXPath = By.XPath("//h2[@class='empty-faves-title']");
         private readonly By _emptyFavesTextByXPath = By.XPath("//p[@class='empty-faves-text']");
         private readonly By _emptyFavesIconByXPath = By.XPath("//svg[@class='FavoriteBorderIcon']");
-        public List<BookModel> GetAllFaveBooks()
+        public List<Book> GetAllFaveBooks()
         {
-            var booksList = new List<BookModel>();
+            var booksList = new List<Book>();
 
             int retries = 3;
 
@@ -69,7 +69,7 @@ namespace TestFramework.Pages.Faves
 
                         if (double.TryParse(priceClean, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceValue))
                         {
-                            booksList.Add(new BookModel
+                            booksList.Add(new Book
                             {
                                 Title = title,
                                 Author = author,

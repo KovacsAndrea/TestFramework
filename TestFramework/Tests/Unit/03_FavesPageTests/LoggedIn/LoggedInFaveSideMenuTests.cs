@@ -7,9 +7,9 @@ using TestFramework.Pages.Auth;
 using TestFramework.Pages.Faves;
 using TestFramework.Reports.Manager;
 
-namespace TestFramework.Tests.Functional.FavesPage
+namespace TestFramework.Tests.Unit.FavesPage
 {
-    [Category("Functional | Fave Page | Fave Side Menu | Logged In")]
+    [Category("Unit | Fave Page | Fave Side Menu | Logged In")]
     [TestFixture(LocatorType.Id)]
     [TestFixture(LocatorType.XPath)]
     public class LoggedInFaveSideMenuTests : BaseTest
@@ -80,7 +80,7 @@ namespace TestFramework.Tests.Functional.FavesPage
         [TestCase("Adrese de livrare", AppRoutes.DeliveryAddressesRoute)]
         [TestCase("Date facturare", AppRoutes.BillingDetailsRoute)]
         [TestCase("Setari siguranta", AppRoutes.SafetySettingsRoute)]
-        public void SideMenu_Navigation_ShouldRedirectToCorrectRoute(string menuAction, string path)
+        public void SideMenu_Navigation_ShouldRedirectToCorrectPage(string menuAction, string path)
         {
             ExecutaClickMeniu(menuAction);
             DriverMgr.Wait(1);

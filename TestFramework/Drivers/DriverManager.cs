@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System.Diagnostics;
 
 namespace TestFramework.Drivers
 {
@@ -20,18 +21,62 @@ namespace TestFramework.Drivers
 
         public IWebElement WaitForElement(By locator)
         {
-            return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
+            return _wait.Until(ExpectedConditions.ElementIsVisible(locator));
         }
 
         public IWebElement WaitForElementToBeClickable(By locator)
         {
-            return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+            return _wait.Until(ExpectedConditions.ElementToBeClickable(locator));
+        }
+
+        public IReadOnlyCollection<IWebElement> FindElements(By locator)
+        {
+            try
+            {
+                _wait.Until(d => d.FindElements(locator).Count > 0);
+                return _driver.FindElements(locator);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                return Array.Empty<IWebElement>();
+            }
+        }
+
+        public IWebElement? FindElement(By locator)
+        {
+            try
+            {
+                var elements = _driver.FindElements(locator);
+                return elements.Count > 0 ? elements[0] : null;
+            }
+            catch (WebDriverTimeoutException)
+            {
+                return null;
+            }
+        }
+
+        public void SendKeys(By locator, string text)
+        {
+            var element = WaitForElementToBeClickable(locator);
+            element.Clear();
+            element.SendKeys(text);
+        }
+
+        public void Click(By locator)
+        {
+            var element = WaitForElementToBeClickable(locator);
+            element.Click();
+        }
+
+        public string GetAttribute(By locator, string attribute)
+        {
+            var element = WaitForElement(locator);
+            return element.GetAttribute(attribute) ?? string.Empty;
         }
 
         public IAlert WaitForAlert()
         {
-            // Așteptăm să apară alerta (uneori are un mic delay)
-            return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            return _wait.Until(ExpectedConditions.AlertIsPresent());
         }
 
         public void AcceptAlert()
@@ -52,54 +97,83 @@ namespace TestFramework.Drivers
             return alert.Text ?? string.Empty;
         }
 
-        public IReadOnlyCollection<IWebElement> FindElements(By locator)
-        {
-            // Asteptam sa apara macar primul element din lista inainte sa le luam pe toate
-            _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(locator));
-            return _driver.FindElements(locator);
-        }
-
-        public IWebElement? FindElement(By locator)
+        public string GetText(By locator)
         {
             try
             {
-                var elements = _driver.FindElements(locator);
-                return elements.Count > 0 ? elements[0] : null;
+                var element = WaitForElement(locator);
+                return element.Text?.Trim() ?? string.Empty;
             }
-            catch
+            catch (WebDriverTimeoutException)
             {
-                return null;
+                return string.Empty;
             }
         }
 
-        public bool IsElementVisible(By locator)
+        public int GetBadgeNumber(By locator)
         {
-            return WaitForElement(locator) != null;
+            var badge = WaitForElement(locator);
+            if (badge != null && !string.IsNullOrEmpty(badge.Text))
+            {
+                TestContext.Out.WriteLine(badge.Text);
+                return int.TryParse(badge.Text.Trim(), out int result) ? result : 0;
+            }
+
+            return 0;
         }
 
-        public void SendKeys(By locator, string text)
+        public string GetUrl() { return _driver.Url; }
+        public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);
+        public void QuitBrowser()
         {
-            var element = WaitForElementToBeClickable(locator);
-            element.Clear();
-            element.SendKeys(text);
+            try
+            {
+                _driver?.Quit();
+                _driver?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _driver = null;
+
+                foreach (var process in Process.GetProcessesByName("chromedriver"))
+                {
+                    try { process.Kill(); } catch { }
+                }
+            }
         }
 
-        public void Click(By locator)
+        public string TakeScreenshot(string testName)
         {
-            var element = WaitForElementToBeClickable(locator);
-            element.Click();
-        }
+            string screenshotDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", "Screenshots");
+            if (!Directory.Exists(screenshotDir)) Directory.CreateDirectory(screenshotDir);
 
-        public string GetAttribute(By locator, string attribute)
-        {
-            var element = WaitForElement(locator);
-            return element.GetAttribute(attribute) ?? String.Empty;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                testName = testName.Replace(c, '_');
+            }
+
+            string fileName = $"{testName}_{DateTime.Now:HHmmss}.png";
+            string filePath = Path.Combine(screenshotDir, fileName);
+
+            Screenshot screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
+            screenshot.SaveAsFile(filePath);
+
+            return Path.Combine("Screenshots", fileName);
         }
 
         public void Wait(int seconds)
         {
             if (seconds <= 0) return;
             System.Threading.Thread.Sleep(seconds * 1000);
+        }
+
+        public bool IsElementVisible(By locator)
+        {
+            return WaitForElement(locator) != null;
         }
 
         public void MoveSliderRight(By locator, int positions)
@@ -118,24 +192,6 @@ namespace TestFramework.Drivers
             {
                 element.SendKeys(Keys.ArrowLeft);
             }
-        }
-
-        public string GetText(By locator)
-        {
-            var element = WaitForElement(locator);
-            return element.Text.Trim();
-        }
-
-        public int GetBadgeNumber(By locator)
-        {
-            var badge = WaitForElement(locator);
-            if (badge != null && !string.IsNullOrEmpty(badge.Text))
-            {
-                TestContext.Out.WriteLine(badge.Text);
-                return int.TryParse(badge.Text.Trim(), out int result) ? result : 0;
-            }
-
-            return 0; 
         }
 
         public void MoveSliderToValue(By sliderLocator, By labelLocator, int targetValue, string directionKey)
@@ -160,29 +216,6 @@ namespace TestFramework.Drivers
             {
                 throw new Exception($"Nu s-a putut ajunge la valoarea {targetValue} in 150 de pasi. Directia folosita: {directionKey}");
             }
-        }
-
-        public string GetUrl() { return _driver.Url; }
-        public void GoToUrl(string url) => _driver.Navigate().GoToUrl(url);
-        public void QuitBrowser() { _driver?.Quit(); _driver?.Dispose(); }
-
-        public string TakeScreenshot(string testName)
-        {
-            string screenshotDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", "Screenshots");
-            if (!Directory.Exists(screenshotDir)) Directory.CreateDirectory(screenshotDir);
-
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                testName = testName.Replace(c, '_');
-            }
-
-            string fileName = $"{testName}_{DateTime.Now:HHmmss}.png";
-            string filePath = Path.Combine(screenshotDir, fileName);
-
-            Screenshot screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
-            screenshot.SaveAsFile(filePath);
-
-            return Path.Combine("Screenshots", fileName);
         }
 
         public void Refresh()

@@ -15,5 +15,6 @@ namespace TestFramework.Constants
         public const string MissingSpecialCharacterCheck = "Qwertyu2";
         public const string ValidPassword = "Qwerty2#";
         public const string DifferentValidPassword = "Wertyu3@";
+        public const string EmptyPassrowd = "";
     }
 }

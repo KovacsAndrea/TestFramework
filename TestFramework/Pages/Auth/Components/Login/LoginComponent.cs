@@ -11,15 +11,13 @@ namespace TestFramework.Pages.Auth
 {
     public class LoginComponent(DriverManager driver) : BasePage(driver)
     {
-        private const string _container = "//div[@id='login-component-container']";
-
         private readonly By _loginTitle = By.Id("login-title");
 
-        private const string _emailContainer = _container + "/*[2]";
+        private const string _emailContainer = "//div[@id=\"login-component-email-container\"]";
         private readonly By _emailInput = By.XPath(_emailContainer + "//input");
         private readonly By _emailErrorMessage = By.XPath(_emailContainer + "//p");
 
-        private const string _passwordContainer = _container + "/*[3]";
+        private const string _passwordContainer = "//div[@id=\"login-component-password-container\"]";
         private readonly By _passwordInput = By.XPath(_passwordContainer + "//input");
         private readonly By _showPasswordButton = By.XPath(_passwordContainer + "//button");
         private readonly By _passwordErrorMessage = By.XPath(_passwordContainer + "//p");

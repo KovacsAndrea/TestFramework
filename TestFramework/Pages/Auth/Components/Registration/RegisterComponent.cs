@@ -11,40 +11,34 @@ namespace TestFramework.Pages.Auth
 {
     public class RegisterComponent(DriverManager driver) : BasePage(driver)
     {
-        private const string _container = "//div[@id='register-component-container']";
 
-        private readonly By _registerTitle = By.Id("register-title");
-
-        // ===== EMAIL =====
-        private const string _emailContainer = _container + "/*[2]";
+        private const string _emailContainer = "//div[@id=\"register-component-email-container\"]";
         private readonly By _emailInput = By.XPath(_emailContainer + "//input");
         private readonly By _emailErrorMessage = By.XPath(_emailContainer + "//p");
 
-        // ===== USERNAME =====
-        private const string _usernameContainer = _container + "/*[3]";
+
+        private const string _usernameContainer = "//*[@id=\"register-component-usename-container\"]";
         private readonly By _usernameInput = By.XPath(_usernameContainer + "//input");
         private readonly By _usernameErrorMessage = By.XPath(_usernameContainer + "//p");
 
-        // ===== PASSWORD =====
-        private const string _passwordContainer = _container + "/*[4]";
+
+        private const string _passwordContainer = "//*[@id=\"register-component-password-container\"]";
         private readonly By _passwordInput = By.XPath(_passwordContainer + "//input");
         private readonly By _showPasswordButton = By.XPath(_passwordContainer + "//button");
         private readonly By _passwordPassMessages = By.XPath(_passwordContainer + "//div[contains(@class,'password-dropdown')]/p[contains(@class,'ok')]");
         private readonly By _passwordFailMessages = By.XPath(_passwordContainer + "//div[contains(@class,'password-dropdown')]/p[contains(@class,'error')]");
         private readonly By _passwordErrorMessage = By.XPath(_passwordContainer + "//p");
 
-        // ===== CONFIRM PASSWORD =====
-        private const string _confirmPasswordContainer = _container + "/*[5]";
+        private const string _confirmPasswordContainer = "//*[@id=\"register-component-confirm-password-container\"]";
         private readonly By _confirmPasswordInput = By.XPath(_confirmPasswordContainer + "//input");
         private readonly By _confirmPasswordErrorMessage = By.XPath(_confirmPasswordContainer + "//p");
 
-        // ===== GLOBAL ELEMENTS =====
         private readonly By _globalErrorMessage = By.Id("register-error-message");
         private readonly By _registerButton = By.Id("register-button");
         private readonly By _loginLink = By.Id("login-link");
         private readonly By _guestLink = By.Id("register-guest-link");
 
-        // ===== EMAIL =====
+
         public void TypeEmail(string email)
         {
             DriverMgr.SendKeys(_emailInput, email);
@@ -55,7 +49,6 @@ namespace TestFramework.Pages.Auth
             return DriverMgr.GetText(_emailErrorMessage);
         }
 
-        // ===== USERNAME =====
         public void TypeUsername(string username)
         {
             DriverMgr.SendKeys(_usernameInput, username);
@@ -66,7 +59,6 @@ namespace TestFramework.Pages.Auth
             return DriverMgr.GetText(_usernameErrorMessage);
         }
 
-        // ===== PASSWORD =====
         public void TypePassword(string password)
         {
             DriverMgr.SendKeys(_passwordInput, password);
@@ -93,8 +85,6 @@ namespace TestFramework.Pages.Auth
             var elements = DriverMgr.FindElements(_passwordPassMessages);
             return elements.Select(e => e.Text.Trim()).ToList().AsReadOnly();
         }
-
-        // ===== CONFIRM PASSWORD =====
         public void TypeConfirmPassword(string password)
         {
             DriverMgr.SendKeys(_confirmPasswordInput, password);
@@ -105,7 +95,6 @@ namespace TestFramework.Pages.Auth
             return DriverMgr.GetText(_confirmPasswordErrorMessage);
         }
 
-        // ===== GLOBAL =====
         public void ClickRegister()
         {
             DriverMgr.Click(_registerButton);
@@ -125,10 +114,6 @@ namespace TestFramework.Pages.Auth
         {
             DriverMgr.Click(_guestLink);
         }
-
-        // ============================================================
-        // ====================== HIGH LEVEL ==========================
-        // ============================================================
 
         public void FillRegisterForm(string email, string username, string password, string confirmPassword)
         {
@@ -157,7 +142,5 @@ namespace TestFramework.Pages.Auth
             FillRegisterForm(user);
             ClickRegister();
         }
-
-
     }
-    }
+}

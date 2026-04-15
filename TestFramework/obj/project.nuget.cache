@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oau+T8xFh7g=",
+  "dgSpecHash": "MmNguHtuF5k=",
   "success": true,
   "projectFilePath": "D:\\ORADEA\\LICENTA\\PARTEA_PRACTICA\\TestFramework\\TestFramework\\TestFramework.csproj",
   "expectedPackageFiles": [
@@ -32,7 +32,7 @@
     "C:\\Users\\andre\\.nuget\\packages\\razorengine.netcore.nixfix\\1.0.1\\razorengine.netcore.nixfix.1.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\selenium.support\\4.40.0\\selenium.support.4.40.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\selenium.webdriver\\4.40.0\\selenium.webdriver.4.40.0.nupkg.sha512",
-    "C:\\Users\\andre\\.nuget\\packages\\selenium.webdriver.chromedriver\\145.0.7632.7600\\selenium.webdriver.chromedriver.145.0.7632.7600.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\selenium.webdriver.chromedriver\\147.0.7727.5600\\selenium.webdriver.chromedriver.147.0.7727.5600.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0\\system.diagnostics.diagnosticsource.5.0.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.drawing.common\\5.0.0\\system.drawing.common.5.0.0.nupkg.sha512",

@@ -9,7 +9,9 @@ namespace TestFramework.Constants
     public static class ErrorMessages
     {
         //Register Fields Errors
-        public const string RegisterInvalidEmail = "Format email invalid";
+        public const string UsernameTooShort = "Username prea scurt.";
+        public const string UsernameTooLong = "Username prea lung.";
+        public const string RegisterInvalidEmail = "Format email invalid.";
         public const string RegisterPasswordLength = "❌ Parola trebuie sa aiba minim 8 caractere.";
         public const string RegisterPasswordLowerCase = "❌ Parola trebuie sa contina o litera mica.";
         public const string RegisterPasswordUpperCase = "❌ Parola trebuie sa contina o litera mare.";
@@ -17,7 +19,6 @@ namespace TestFramework.Constants
         public const string RegisterPasswordSpecialCharacter = "❌ Parola trebuie sa contina un caracter special.";
         public const string RegisterConfirmPasswordNotMatching = "Parolele nu se potrivesc.";
         public const string RegisterConfirmPasswordWeak = "Parola nu e destul de puternica.";
-
         //Register Global Errors
         public const string RegisterExistingEmail = "Un cont cu acest email există deja. Ți-ai uitat parola?";
         public const string RegisterExistingUsername = "Acest nume de utilizator este deja folosit. Încearcă altul!";

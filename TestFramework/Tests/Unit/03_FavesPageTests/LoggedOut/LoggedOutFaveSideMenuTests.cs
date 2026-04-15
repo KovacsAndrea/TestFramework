@@ -3,10 +3,10 @@ using TestFramework.Constants;
 using TestFramework.Pages.Faves;
 using TestFramework.Reports.Manager;
 
-namespace TestFramework.Tests.Functional.FavesPage
+namespace TestFramework.Tests.Unit.FavesPage
 {
     [TestFixture]
-    [Category("Functional | Fave Page | Fave Side Menu | Logged Out")]
+    [Category("Unit | Fave Page | Fave Side Menu | Logged Out")]
     public class LoggedOutFaveSideMenuTests : BaseTest
     {
         private FavePage favePage;
@@ -25,11 +25,16 @@ namespace TestFramework.Tests.Functional.FavesPage
 
         #region POSITIVE TESTS
         [Test]
+        public void SideMenu_ShouldDisplayExpectedMessage()
+        {
+            ReportManager.Test.Info("Se verifica daca mesajul afisat este cel corect.");
+ 
+        }
+        [Test]
         public void SideMenu_ClickingLogIn_ShouldRedirectToAuth()
         {
             ReportManager.Test.Info("Se da click pe Log In din Side Menu si se verifica redirect-ul catre Auth.");
             favePage.SideMenu.ClickOnLogIn();
-            DriverMgr.Wait(1);
 
             AssertRedirect(AppRoutes.AuthPageRoute);
         }

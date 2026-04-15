@@ -1,47 +1,33 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TestFramework.Constants;
-using TestFramework.Models;
-using TestFramework.Pages.Auth;
 using TestFramework.Pages.Faves;
-using TestFramework.Pages.Home;
-using TestFramework.GlobalComponents;
 using TestFramework.Reports.Manager;
 
-namespace TestFramework.Tests.Functional.FavesPage
+namespace TestFramework.Tests.Unit.FavesPage
 {
     [TestFixture]
-    [Category("Functional | Fave Page | Fave Grid | Logged In")]
-    public class LoggedInFaveGridTests : BaseTest
+    [Category("Unit | Fave Page | Fave Grid | Logged Out")]
+    public class LoggedOutFaveGridTests : BaseTest
     {
         private FavePage favePage;
-        private AuthPage authPage;
-        private NavBar navBar;
 
         #region SETUP
         [SetUp]
         public void Setup()
         {
             favePage = new FavePage(DriverMgr);
-            authPage = new AuthPage(DriverMgr);
-            navBar = new NavBar(DriverMgr);
 
-            ReportManager.Test.Info("Se deschide pagina de autentificare si se face login cu user-ul cunoscut.");
-            authPage.Open();
-            authPage.Login.LoginUser(KnownUsers.UserWithNoFavorites);
-            DriverMgr.Wait(1);
-
-            ReportManager.Test.Info("Se acceseaza pagina de Favorites din NavBar.");
-            navBar.clickOnFavorites();
+            ReportManager.Test.Info("Se deschide pagina Favorites pentru user neautentificat.");
+            favePage.Open();
             DriverMgr.Wait(1);
         }
         #endregion
 
         #region POSITIVE TESTS
         [Test]
-        public void EmptyFavesPage_ShouldDisplayExpectedMessage()
+        public void FavesGrid_ShouldDisplayExpectedMessage()
         {
-            ReportManager.Test.Info("Verificare mesaj si iconita pe pagina Favorites goala.");
+            ReportManager.Test.Info("Se verifica mesajele si iconita pe pagina Favorites goala.");
 
             string emptyFavesTitle = favePage.FaveGrid.GetEmptyListMessageTitle();
             string emptyFavesText = favePage.FaveGrid.GetEmptyListMessageText();
@@ -53,10 +39,9 @@ namespace TestFramework.Tests.Functional.FavesPage
         }
 
         [Test]
-        public void EmptyFavesPage_ClickingBrowseButton_ShouldRedirectToHome()
+        public void FavesGrid_ClickingBrowseButton_ShouldRedirectToHome()
         {
             ReportManager.Test.Info("Se da click pe Browse si se verifica redirect-ul catre Home.");
-
             favePage.FaveGrid.ClickOnBrowse();
             DriverMgr.Wait(1);
 

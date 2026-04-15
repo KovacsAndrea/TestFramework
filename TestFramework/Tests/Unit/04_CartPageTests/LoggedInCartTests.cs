@@ -1,4 +1,4 @@
-﻿namespace TestFramework.Tests.Functional.CartPage
+﻿namespace TestFramework.Tests.Unit.CartPage
 {
     internal class LoggedInCartTests
     {
